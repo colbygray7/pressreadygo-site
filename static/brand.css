@@ -1,0 +1,246 @@
+/*
+  PressReady design system.
+
+  The visual language is borrowed from prepress itself: registration targets,
+  crop marks, colour bars, densitometer readouts. Ink-dark ground, press teal,
+  and a warning amber for the things the software rejects.
+
+  Palette rule: no purple, anywhere.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --ink:      #06100F;
+  --ink-2:    #0B1A1C;
+  --ink-3:    #12282C;
+  --ink-4:    #1B3A3F;
+
+  --teal:     #0E7490;
+  --teal-lo:  #0A5A70;
+  --cyan:     #22D3EE;
+  --amber:    #F5A524;
+  --green:    #21A366;
+  --red:      #E2564B;
+
+  --paper:    #F3F8F8;
+  --paper-2:  #E4EEEE;
+  --muted:    #7E9BA1;
+  --muted-2:  #5A777D;
+
+  --line:     rgba(120, 175, 185, .18);
+  --line-2:   rgba(120, 175, 185, .32);
+
+  --display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+
+  --wrap: 1120px;
+  --r: 12px;
+}
+
+*{ box-sizing: border-box }
+
+html{ scroll-behavior: smooth }
+
+body{
+  margin: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a{ color: var(--cyan); text-decoration: none }
+a:hover{ text-decoration: underline }
+
+.wrap{ width: min(var(--wrap), calc(100% - 48px)); margin-inline: auto }
+
+/* -- Type ------------------------------------------------------------------ */
+
+h1, h2, h3, h4{ font-weight: 600; line-height: 1.1; margin: 0 0 .5em; letter-spacing: -.02em }
+h1{ font-size: clamp(2.6rem, 6.2vw, 4.6rem); font-weight: 700; letter-spacing: -.035em }
+h2{ font-size: clamp(1.8rem, 3.4vw, 2.7rem) }
+h3{ font-size: 1.22rem }
+p{ margin: 0 0 1rem }
+
+.lede{ font-size: clamp(1.05rem, 1.7vw, 1.28rem); color: #C4DBDE; max-width: 62ch }
+.muted{ color: var(--muted) }
+
+.tag{
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+}
+.tag::before{
+  content: '';
+  width: 22px; height: 1px;
+  background: var(--cyan);
+  opacity: .7;
+}
+
+/* -- Buttons --------------------------------------------------------------- */
+
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  padding: .85rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-family: var(--display);
+  font-size: .97rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .12s ease, background .15s ease, border-color .15s ease;
+  text-decoration: none;
+}
+.btn:hover{ text-decoration: none; transform: translateY(-1px) }
+.btn:active{ transform: translateY(0) }
+.btn:disabled{ opacity: .45; cursor: default; transform: none }
+
+.btn-primary{ background: var(--cyan); color: #04211F }
+.btn-primary:hover{ background: #4BDDF2 }
+
+.btn-ghost{ background: transparent; color: var(--paper); border-color: var(--line-2) }
+.btn-ghost:hover{ border-color: var(--cyan); color: var(--cyan) }
+
+.btn-block{ width: 100% }
+
+/* -- Surfaces -------------------------------------------------------------- */
+
+.card{
+  background: linear-gradient(180deg, rgba(18,40,44,.85), rgba(11,26,28,.85));
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 26px;
+}
+
+/* Crop marks, the way a press sheet is trimmed. */
+.cropped{ position: relative }
+.cropped::before, .cropped::after{
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  border-color: var(--line-2);
+  border-style: solid;
+  pointer-events: none;
+}
+.cropped::before{ top: -1px; left: -1px; border-width: 1px 0 0 1px }
+.cropped::after{ bottom: -1px; right: -1px; border-width: 0 1px 1px 0 }
+
+/* The colour bar that runs down the edge of a press sheet. */
+.colourbar{
+  display: flex;
+  height: 3px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.colourbar i{ flex: 1 }
+.colourbar i:nth-child(1){ background: var(--cyan) }
+.colourbar i:nth-child(2){ background: var(--teal) }
+.colourbar i:nth-child(3){ background: var(--amber) }
+.colourbar i:nth-child(4){ background: var(--paper-2) }
+.colourbar i:nth-child(5){ background: var(--ink-4) }
+
+/* -- Nav ------------------------------------------------------------------- */
+
+.nav{
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  backdrop-filter: blur(14px);
+  background: rgba(6,16,15,.72);
+  border-bottom: 1px solid var(--line);
+}
+.nav-in{
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; padding: 14px 0;
+}
+.nav-links{ display: flex; align-items: center; gap: 26px }
+.nav-links a{ color: var(--paper); font-size: .93rem; opacity: .82 }
+.nav-links a:hover{ opacity: 1; color: var(--cyan); text-decoration: none }
+
+.logo{ display: inline-flex; align-items: center; gap: 10px; color: var(--paper) }
+.logo:hover{ text-decoration: none }
+.logo-mark{ width: 26px; height: 26px; flex: none }
+.logo-text{
+  font-weight: 700; font-size: 1.12rem; letter-spacing: -.03em;
+}
+.logo-text b{ color: var(--cyan); font-weight: 700 }
+
+/* -- Forms ----------------------------------------------------------------- */
+
+label{
+  display: block;
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+input[type=text], input[type=email], input[type=password], select{
+  width: 100%;
+  padding: .78rem .9rem;
+  background: rgba(6,16,15,.75);
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: .97rem;
+  transition: border-color .15s ease;
+}
+input:focus, select:focus{ outline: none; border-color: var(--cyan) }
+select option{ background: var(--ink-2); color: var(--paper) }
+
+.field{ margin-bottom: 16px }
+
+.note{
+  font-size: .87rem;
+  padding: .7rem .85rem;
+  border-radius: 8px;
+  border: 1px solid var(--line-2);
+}
+.note.bad{ border-color: rgba(226,86,75,.5); background: rgba(226,86,75,.1); color: #FFC9C4 }
+.note.good{ border-color: rgba(33,163,102,.5); background: rgba(33,163,102,.1); color: #A5E9C8 }
+
+/* -- Auth pages ------------------------------------------------------------ */
+
+.auth-wrap{
+  min-height: calc(100vh - 61px);
+  display: grid;
+  place-items: center;
+  padding: 44px 24px;
+}
+.auth-card{ width: min(430px, 100%) }
+.auth-card h1{ font-size: 1.9rem; margin-bottom: .3rem }
+
+/* -- Footer ---------------------------------------------------------------- */
+
+.foot{
+  border-top: 1px solid var(--line);
+  margin-top: 90px;
+  padding: 34px 0;
+  color: var(--muted-2);
+  font-size: .88rem;
+}
+.foot-in{ display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap }
+
+/* -- Utility --------------------------------------------------------------- */
+
+.mono{ font-family: var(--mono) }
+.hide{ display: none !important }
+.center{ text-align: center }
+
+@media (max-width: 720px){
+  .nav-links a.hide-sm{ display: none }
+  .wrap{ width: calc(100% - 32px) }
+}

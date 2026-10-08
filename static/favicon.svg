@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Dark plate so the mark reads on both light and dark browser chrome. -->
+  <rect width="32" height="32" rx="7" fill="#06100F"/>
+  <!-- Crop marks, trimmed back at this size so they survive 16px. -->
+  <path d="M4 4h3.4M4 4v3.4M28 4h-3.4M28 4v3.4M4 28h3.4M4 28v-3.4M28 28h-3.4M28 28v-3.4"
+        stroke="#7E9BA1" stroke-width="1.7" stroke-linecap="square"/>
+  <!-- The imprint box, locked. -->
+  <rect x="9.5" y="9.5" width="13" height="13" rx="1.5"
+        stroke="#22D3EE" stroke-width="2.1" fill="none"/>
+  <!-- Art coming out of it. -->
+  <path d="M13 19 19 13M19 13h-3.6M19 13v3.6"
+        stroke="#22D3EE" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
