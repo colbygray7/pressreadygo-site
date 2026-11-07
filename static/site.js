@@ -15,7 +15,7 @@
 (function () {
   'use strict';
 
-  const LEAD_INBOX = 'hello@pressreadygo.com';
+  const LEAD_INBOX = 'colby@corbinatech.com';
   const LEADS_WEBHOOK = 'https://hook.us2.make.com/4k15ful5ugrqb3n67620wrx04o3uotpm';
   const EMAIL_ENDPOINT = 'https://formsubmit.co/ajax/' + LEAD_INBOX;
   const TIMEOUT_MS = 8000;
@@ -30,7 +30,6 @@
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(payload),
         signal: ctrl.signal,
-        keepalive: true,
       });
       const data = await res.json().catch(() => ({}));
       return res.ok && String(data.success) === 'true';
@@ -127,13 +126,18 @@
         fld.classList.toggle('bad', !ok);
         if (!ok && !firstBad) firstBad = el;
       };
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
       mark('name', !!name);
-      mark('company', !!company);
-      mark('email', /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email));
+      mark('email', emailOk);
       if (firstBad) {
-        err.textContent = 'Please add your name, shop name and a valid email so we can reach you.';
+        const missing = [!name && 'your name', !emailOk && (email ? 'a valid email' : 'your email')].filter(Boolean);
+        err.textContent = 'Almost there: please add ' + missing.join(' and ') + ' so we can reach you.';
         err.hidden = false;
-        firstBad.focus();
+        // Bring the problem into view rather than jumping away from the message.
+        firstBad.scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' });
+        firstBad.focus({ preventScroll: true });
+        const b = $('button[type=submit]', form);
+        b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
         return;
       }
 
@@ -147,7 +151,7 @@
         form_location: shell.dataset.variant,
         page: location.href.split('#')[0],
         submitted_at: new Date().toString(),
-        _subject: 'New PressReady demo request: ' + company + ' (' + name + ')',
+        _subject: 'New PressReady demo request: ' + (company || name),
         _template: 'table',
         _replyto: email,
         _captcha: 'false',
@@ -169,12 +173,12 @@
       } else {
         const body = [
           'Hi PressReady,', '', "I'd like a demo.", '',
-          'Name: ' + name, 'Shop: ' + company, 'Email: ' + email,
+          'Name: ' + name, company ? 'Shop: ' + company : '', 'Email: ' + email,
           payload.phone ? 'Phone: ' + payload.phone : '',
           'Equipment: ' + payload.equipment,
           payload.message ? '\n' + payload.message : '',
         ].filter(Boolean).join('\n');
-        const href = 'mailto:' + LEAD_INBOX + '?subject=' + encodeURIComponent('PressReady demo request: ' + company) +
+        const href = 'mailto:' + LEAD_INBOX + '?subject=' + encodeURIComponent('PressReady demo request: ' + (company || name)) +
                      '&body=' + encodeURIComponent(body);
         err.innerHTML = '<strong>Our form service didn\'t respond.</strong> Your details are ready to go by email instead, one tap:' +
           '<a class="btn btn-primary btn-block fallback-btn" href="' + href + '">Send my details by email</a>' +
@@ -228,8 +232,11 @@
     // Near the top, the hero form is right there: just focus it.
     if (heroInView() && !plan) {
       e.preventDefault();
+      heroShell.scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' });
+      const card = $('.form-card', heroShell);
+      card.classList.remove('flash'); void card.offsetWidth; card.classList.add('flash');
       const f = $('input[name=name]', heroShell);
-      if (f && !$('.lead-form', heroShell).hidden) f.focus();
+      if (f && !$('.lead-form', heroShell).hidden) f.focus({ preventScroll: true });
       return;
     }
     if (modal && typeof modal.showModal === 'function') {
