@@ -16,7 +16,7 @@
   'use strict';
 
   const LEAD_INBOX = 'colby@corbinatech.com';
-  const WEB3FORMS_KEY = '';   // paste your Web3Forms access key here
+  const WEB3FORMS_KEY = '9d4e3cea-0ef7-4338-bb4c-fe79418b203e';   // public by design; it can only send to your inbox
   const TIMEOUT_MS = 10000;
 
   // POST JSON; resolves true only on an explicit {success: true}.
