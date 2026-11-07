@@ -1,24 +1,23 @@
 /*
   PressReady marketing page behaviour.
 
-  Lead capture, two channels sent at the same time:
+  The demo form emails each request straight to LEAD_INBOX:
 
-  1. LEADS_WEBHOOK: a Make scenario ("PressReady website leads") that saves
-     every lead to the Make data store "PressReady leads" and answers
-     {success: true}. This is the system of record.
-  2. EMAIL_ENDPOINT: FormSubmit, which emails the lead to LEAD_INBOX. Its very
-     first submission sends a one-time activation link to that inbox.
+  - Web3Forms (https://web3forms.com) is the main path. Paste the access key
+    it emails you into WEB3FORMS_KEY below.
+  - FormSubmit is a backup that needs no key. Its first submission emails a
+    one-time activation link to LEAD_INBOX.
 
-  The visitor sees success if either channel confirms. If neither does, they
-  get a one-tap pre-filled email instead, so a lead is never silently lost.
+  Both are tried at once. The visitor sees the "Request sent" screen as soon
+  as either confirms. If neither does, they get a one-tap pre-filled email to
+  LEAD_INBOX, so a request is never silently lost.
 */
 (function () {
   'use strict';
 
   const LEAD_INBOX = 'colby@corbinatech.com';
-  const LEADS_WEBHOOK = 'https://hook.us2.make.com/4k15ful5ugrqb3n67620wrx04o3uotpm';
-  const EMAIL_ENDPOINT = 'https://formsubmit.co/ajax/' + LEAD_INBOX;
-  const TIMEOUT_MS = 8000;
+  const WEB3FORMS_KEY = '9d4e3cea-0ef7-4338-bb4c-fe79418b203e';   // public by design; it can only send to your inbox
+  const TIMEOUT_MS = 10000;
 
   // POST JSON; resolves true only on an explicit {success: true}.
   async function send(url, payload) {
@@ -40,13 +39,18 @@
     }
   }
 
-  // True as soon as any channel confirms; false once all have failed.
-  function anyDelivered(promises) {
+  // Sends the request by every configured path; true as soon as one confirms.
+  function deliver(fields, subject, replyTo) {
+    const jobs = [];
+    if (WEB3FORMS_KEY) {
+      jobs.push(send('https://api.web3forms.com/submit', Object.assign(
+        { access_key: WEB3FORMS_KEY, subject, from_name: 'PressReady website', replyto: replyTo }, fields)));
+    }
+    jobs.push(send('https://formsubmit.co/ajax/' + LEAD_INBOX, Object.assign(
+      { _subject: subject, _template: 'table', _replyto: replyTo, _captcha: 'false' }, fields)));
     return new Promise(resolve => {
-      let left = promises.length;
-      promises.forEach(p => p.then(ok => {
-        if (ok) resolve(true); else if (--left === 0) resolve(false);
-      }));
+      let left = jobs.length;
+      jobs.forEach(p => p.then(ok => { if (ok) resolve(true); else if (--left === 0) resolve(false); }));
     });
   }
 
@@ -142,27 +146,27 @@
       }
 
       const equipment = fd.getAll('equipment').join(', ');
-      const payload = {
-        name, email, company,
-        phone: (fd.get('phone') || '').trim(),
-        equipment: equipment || '(not specified)',
-        message: (fd.get('message') || '').trim(),
-        interested_plan: shell.dataset.plan || '',
-        form_location: shell.dataset.variant,
-        page: location.href.split('#')[0],
-        submitted_at: new Date().toString(),
-        _subject: 'New PressReady demo request: ' + (company || name),
-        _template: 'table',
-        _replyto: email,
-        _captcha: 'false',
+      const phone = (fd.get('phone') || '').trim();
+      const message = (fd.get('message') || '').trim();
+      // Keys are written for a human reading the email.
+      const fields = {
+        'Name': name,
+        'Email': email,
+        'Shop / company': company,
+        'Phone': phone,
+        'Runs': equipment,
+        'Message': message,
+        'Interested in plan': shell.dataset.plan || '',
+        'Form': shell.dataset.variant,
+        'Page': location.href.split('#')[0],
       };
-      Object.keys(attrib).forEach(k => { payload[k] = attrib[k]; });
-      Object.keys(payload).forEach(k => { if (payload[k] === '') delete payload[k]; });
+      Object.keys(attrib).forEach(k => { fields[k] = attrib[k]; });
+      Object.keys(fields).forEach(k => { if (!fields[k]) delete fields[k]; });
 
       form.classList.add('sending');
       $('.btn-label', form).textContent = 'Sending…';
 
-      const ok = await anyDelivered([send(LEADS_WEBHOOK, payload), send(EMAIL_ENDPOINT, payload)]);
+      const ok = await deliver(fields, 'New PressReady demo request: ' + (company || name), email);
 
       form.classList.remove('sending');
       $('.btn-label', form).textContent = 'Book my free demo';
@@ -174,9 +178,9 @@
         const body = [
           'Hi PressReady,', '', "I'd like a demo.", '',
           'Name: ' + name, company ? 'Shop: ' + company : '', 'Email: ' + email,
-          payload.phone ? 'Phone: ' + payload.phone : '',
-          'Equipment: ' + payload.equipment,
-          payload.message ? '\n' + payload.message : '',
+          phone ? 'Phone: ' + phone : '',
+          equipment ? 'Runs: ' + equipment : '',
+          message ? '\n' + message : '',
         ].filter(Boolean).join('\n');
         const href = 'mailto:' + LEAD_INBOX + '?subject=' + encodeURIComponent('PressReady demo request: ' + (company || name)) +
                      '&body=' + encodeURIComponent(body);
@@ -196,6 +200,7 @@
     $('.done-email', done).textContent = email || 'you';
     form.hidden = true; if (head) head.hidden = true;
     done.hidden = false; done.focus({ preventScroll: true });
+    done.scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' });
     // Mirror success to every copy so nobody is asked twice.
     $$('.form-shell').forEach(s => {
       if (s === shell) return;
@@ -204,16 +209,10 @@
       $('.done-email', d).textContent = email || 'you';
       f.hidden = true; if (h) h.hidden = true; d.hidden = false;
     });
-    try { sessionStorage.setItem('pr_lead', JSON.stringify({ name, email })); } catch (e) {}
   }
 
-  // Returning from the no-JS fallback, or already submitted this visit.
-  (function () {
-    let prior = null;
-    try { prior = JSON.parse(sessionStorage.getItem('pr_lead') || 'null'); } catch (e) {}
-    if (new URLSearchParams(location.search).get('thanks') === '1') prior = prior || { name: '', email: '' };
-    if (prior) showDone(heroShell, prior.name, prior.email);
-  })();
+  // Returning from the no-JavaScript form post.
+  if (new URLSearchParams(location.search).get('thanks') === '1') showDone(heroShell, '', '');
 
   function track(evt, params) {
     try { if (window.gtag) window.gtag('event', evt, params); } catch (e) {}
