@@ -2,119 +2,32 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PressReady</title>
-<meta name="description" content="Turn distributor art proofs into press-ready production files in seconds. Screen print, laser engraving, and cup warp, all from the original PDF.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PressReady | Distributor proofs to press-ready files in seconds</title>
+<meta name="description" content="PressReady turns distributor art proofs into press-ready production files in seconds: layered TIF with white underbase for screen print and transfers, 1:1 vector .AI for laser engraving, and arc-warped PDFs for cups. Book a demo on your own proofs.">
+<meta name="theme-color" content="#06100F">
+<link rel="canonical" href="https://pressreadygo.com/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pressreadygo.com/">
+<meta property="og:title" content="PressReady | Proofs in. Press-ready out.">
+<meta property="og:description" content="Distributor proof PDFs to press-ready TIF, AI and arc-warped cup files in seconds. No Illustrator session, identical every time.">
+<meta property="og:image" content="https://pressreadygo.com/img/2_garment_underbase.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://formsubmit.co">
 <link rel="stylesheet" href="/static/brand.css">
-<style>
-  /* -- Hero ---------------------------------------------------------------- */
-  .hero{ position: relative; min-height: 92vh; display: flex; align-items: center; overflow: hidden }
-  .hero-media{ position: absolute; inset: 0; z-index: 0 }
-  .hero-media canvas, .hero-media video{ width: 100%; height: 100%; display: block; object-fit: cover }
-  .hero-in{ position: relative; z-index: 2; padding: 120px 0 90px }
-  .hero h1{ margin: 18px 0 20px; max-width: 15ch }
-  .hero h1 em{ font-style: normal; color: var(--cyan) }
-  .hero-cta{ display: flex; gap: 14px; flex-wrap: wrap; margin: 32px 0 0 }
-
-  .counter{
-    margin-top: 54px; padding-top: 22px;
-    border-top: 1px solid var(--line);
-    display: flex; gap: 46px; flex-wrap: wrap;
-  }
-  .counter .n{
-    font-family: var(--mono); font-size: 2.1rem; font-weight: 600;
-    color: var(--paper); letter-spacing: -.02em; line-height: 1;
-    font-variant-numeric: tabular-nums;
-  }
-  .counter .k{
-    font-family: var(--mono); font-size: .68rem; letter-spacing: .15em;
-    text-transform: uppercase; color: var(--muted); margin-top: 8px;
-  }
-
-  .scroll-hint{
-    position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
-    z-index: 2; font-family: var(--mono); font-size: .65rem; letter-spacing: .2em;
-    text-transform: uppercase; color: var(--muted-2);
-  }
-
-  /* -- Sections ------------------------------------------------------------ */
-  section{ padding: 96px 0 }
-  .sec-head{ max-width: 64ch; margin-bottom: 52px }
-  .sec-head h2{ margin-top: 14px }
-
-  .grid-3{ display: grid; grid-template-columns: repeat(auto-fit, minmax(276px, 1fr)); gap: 20px }
-  .grid-2{ display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 34px; align-items: center }
-
-  .tool .bar{ margin-bottom: 20px }
-  .tool h3{ margin-bottom: 8px }
-  .tool p{ color: var(--muted); font-size: .95rem; margin-bottom: 16px }
-  .tool .out{
-    font-family: var(--mono); font-size: .74rem; color: var(--cyan);
-    letter-spacing: .06em; padding-top: 14px; border-top: 1px dashed var(--line-2);
-  }
-
-  /* -- Before and after ---------------------------------------------------- */
-  .compare{ display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden }
-  .compare > div{ padding: 30px }
-  .compare .before{ background: rgba(245,165,36,.05); border-right: 1px solid var(--line) }
-  .compare .after{ background: rgba(34,211,238,.05) }
-  .compare h4{ font-family: var(--mono); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 16px }
-  .compare .before h4{ color: var(--amber) }
-  .compare .after h4{ color: var(--cyan) }
-  .compare ul{ margin: 0; padding-left: 18px; color: var(--muted); font-size: .93rem }
-  .compare li{ margin-bottom: 9px }
-  .compare li::marker{ color: var(--line-2) }
-
-  /* -- Steps --------------------------------------------------------------- */
-  .steps{ counter-reset: s; display: grid; gap: 2px }
-  .step{
-    counter-increment: s; display: grid; grid-template-columns: 64px 1fr;
-    gap: 24px; padding: 26px 0; border-bottom: 1px dashed var(--line);
-  }
-  .step::before{
-    content: '0' counter(s); font-family: var(--mono); font-size: 1.5rem;
-    color: var(--ink-4); font-weight: 600;
-  }
-  .step h3{ margin-bottom: 6px }
-  .step p{ color: var(--muted); margin: 0; font-size: .95rem }
-
-  /* -- Pricing ------------------------------------------------------------- */
-  .price{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; align-items: stretch }
-  .plan{ display: flex; flex-direction: column }
-  .plan.feature{ border-color: var(--teal); box-shadow: 0 0 0 1px rgba(14,116,144,.35) }
-  .plan .amt{ font-family: var(--mono); font-size: 2.6rem; font-weight: 600; letter-spacing: -.03em; margin: 14px 0 2px }
-  .plan .per{ color: var(--muted); font-size: .85rem; margin-bottom: 22px }
-  .plan ul{ list-style: none; padding: 0; margin: 0 0 26px; flex: 1 }
-  .plan li{ padding: 7px 0 7px 26px; position: relative; font-size: .93rem; color: #C4DBDE }
-  .plan li::before{ content: '+'; position: absolute; left: 0; color: var(--cyan); font-family: var(--mono) }
-  .ribbon{
-    font-family: var(--mono); font-size: .64rem; letter-spacing: .16em;
-    text-transform: uppercase; color: var(--ink); background: var(--cyan);
-    padding: 3px 9px; border-radius: 4px; align-self: flex-start; margin-bottom: 12px;
-  }
-
-  .shots{ display: grid; gap: 22px }
-  .shots figure{ margin: 0; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; background: #F5F3EE }
-  .shots img{ display: block; width: 100%; height: auto }
-
-  .cta-band{ text-align: center; padding: 88px 0 }
-  .cta-band h2{ max-width: 20ch; margin-inline: auto }
-
-  @media (max-width: 860px){
-    .hero{ min-height: 82vh }
-    .hero-in{ padding: 92px 0 70px }
-    .compare{ grid-template-columns: 1fr }
-    .compare .before{ border-right: 0; border-bottom: 1px solid var(--line) }
-    .counter{ gap: 30px }
-  }
-</style>
+<link rel="stylesheet" href="/static/site.css">
 </head>
 <body>
 
-<nav class="nav">
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- Nav --------------------------------------------------------------------- -->
+<nav class="nav" id="nav">
   <div class="wrap nav-in">
-    <a class="logo" href="/">
+    <a class="logo" href="/" aria-label="PressReady home">
       <svg class="logo-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
         <path d="M3 3h7M3 3v7M29 3h-7M29 3v7M3 29h7M3 29v-7M29 29h-7M29 29v-7"
               stroke="#7E9BA1" stroke-width="1.6" stroke-linecap="square"/>
@@ -125,278 +38,444 @@
       <span class="logo-text">Press<b>Ready</b></span>
     </a>
     <div class="nav-links">
+      <a href="#demo" class="hide-sm">Watch it work</a>
       <a href="#tools" class="hide-sm">Tools</a>
-      <a href="#how" class="hide-sm">How it works</a>
+      <a href="#output" class="hide-sm">Real output</a>
       <a href="#pricing" class="hide-sm">Pricing</a>
-      <a href="#see" class="hide-sm">See it</a>
-      <a href="mailto:hello@pressreadygo.com?subject=PressReady%20demo" class="btn btn-primary" style="padding:.6rem 1.1rem">Request a demo</a>
+      <a href="#faq" class="hide-sm">FAQ</a>
+      <a href="#get-demo" class="btn btn-primary btn-sm" data-open-form>Book a demo</a>
     </div>
   </div>
 </nav>
 
-<!-- Hero ------------------------------------------------------------------ -->
-<header class="hero">
-  <!-- Swap the canvas for a <video autoplay muted loop playsinline> when
-       real footage exists. Everything above it is layered independently. -->
-  <div class="hero-media"><canvas id="hero-canvas"></canvas></div>
+<main id="main">
 
-  <div class="wrap hero-in">
-    <span class="tag">Prepress, automated</span>
-    <h1>Proofs in.<br><em>Press-ready</em> out.</h1>
-    <p class="lede">
-      Your distributor sends a proof PDF. Your equipment needs something else
-      entirely. PressReady does that conversion in seconds instead of by
-      hand in Illustrator, and it does it the same way every time.
-    </p>
-    <div class="hero-cta">
-      <a href="mailto:hello@pressreadygo.com?subject=PressReady%20demo" class="btn btn-primary">Request a demo</a>
-      <a href="#see" class="btn btn-ghost">See real output</a>
+<!-- Hero -------------------------------------------------------------------- -->
+<header class="hero" id="top">
+  <canvas class="hero-dots" id="hero-dots" aria-hidden="true"></canvas>
+  <div class="hero-glow" aria-hidden="true"></div>
+
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="pill"><i class="pulse"></i> Early access: onboarding print shops now</span>
+      <h1>Proofs in.<br><span class="grad">Press-ready</span> out.</h1>
+      <p class="lede">
+        PressReady turns the art proof PDF your distributor sends into the exact
+        file your <strong>screen printer</strong>, <strong>laser</strong> or
+        <strong>cup press</strong> needs. Seconds instead of an Illustrator session,
+        and the same result every time.
+      </p>
+
+      <ul class="checks">
+        <li>Finds the imprint box and lifts the art at true 1:1 size</li>
+        <li>Builds the white underbase, spot channel and choke for you</li>
+        <li>Outputs .TIF, laser-ready .AI, or arc-warped cup .PDF</li>
+      </ul>
+
+      <div class="hero-alt">
+        <a href="#demo" class="link-arrow">Watch a proof go through <span aria-hidden="true">&darr;</span></a>
+      </div>
     </div>
 
-    <div class="counter">
-      <div>
-        <div class="n">3</div>
-        <div class="k">Production formats</div>
-      </div>
-      <div>
-        <div class="n">26</div>
-        <div class="k">Real proofs in the test suite</div>
-      </div>
-      <div>
-        <div class="n">1:1</div>
-        <div class="k">Actual size output</div>
+    <!-- The lead form. JS clones this into the dialog and the closing section. -->
+    <div class="form-shell" id="get-demo">
+      <div class="form-card glass">
+        <div class="form-head">
+          <span class="tag">Free demo</span>
+          <h2 class="form-title">See it on <em>your</em> proofs</h2>
+          <p class="form-sub">Tell us where to reach you. We'll set up a short call and run a proof that's given your art team trouble.</p>
+        </div>
+
+        <form class="lead-form" action="https://formsubmit.co/hello@pressreadygo.com" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="New PressReady demo request">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_next" value="https://pressreadygo.com/?thanks=1#get-demo">
+          <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <div class="row-2">
+            <div class="fld">
+              <input id="f-name" name="name" type="text" autocomplete="name" placeholder=" " required>
+              <label for="f-name">Your name</label>
+            </div>
+            <div class="fld">
+              <input id="f-company" name="company" type="text" autocomplete="organization" placeholder=" " required>
+              <label for="f-company">Shop / company</label>
+            </div>
+          </div>
+
+          <div class="fld">
+            <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder=" " required>
+            <label for="f-email">Work email</label>
+          </div>
+
+          <div class="fld">
+            <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder=" ">
+            <label for="f-phone">Phone <span class="opt">(optional)</span></label>
+          </div>
+
+          <fieldset class="chips">
+            <legend>What do you run? <span class="opt">(tap all that apply)</span></legend>
+            <label class="chip"><input type="checkbox" name="equipment" value="Screen print / heat transfer"><span>Screen print / transfers</span></label>
+            <label class="chip"><input type="checkbox" name="equipment" value="Laser engraving"><span>Laser engraving</span></label>
+            <label class="chip"><input type="checkbox" name="equipment" value="Cups / drinkware"><span>Cups / drinkware</span></label>
+          </fieldset>
+
+          <div class="fld fld-note">
+            <textarea id="f-note" name="message" rows="2" placeholder=" "></textarea>
+            <label for="f-note">Anything we should know? <span class="opt">(optional)</span></label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg btn-shine">
+            <span class="btn-label">Book my free demo</span>
+            <svg class="btn-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+
+          <p class="form-error" role="alert" hidden></p>
+          <p class="form-fine">No spam and no obligation. One reply from a real person.</p>
+        </form>
+
+        <div class="form-done" hidden tabindex="-1">
+          <svg class="done-check" viewBox="0 0 52 52" aria-hidden="true">
+            <circle cx="26" cy="26" r="24" fill="none"/>
+            <path d="M15 27l7 7 15-16" fill="none"/>
+          </svg>
+          <h3>You're in<span class="done-name"></span>.</h3>
+          <p>We'll email <strong class="done-email">you</strong> to set up your demo.
+             Have a proof that's been a headache? Reply with it attached and we'll run it live on the call.</p>
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="scroll-hint">Scroll</div>
 </header>
 
-<!-- Problem --------------------------------------------------------------- -->
-<section id="problem">
+<!-- Ticker ------------------------------------------------------------------- -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>4imprint proofs</span><b>&#9670;</b><span>Solid-border proofs</span><b>&#9670;</b><span>PO &amp; distributor templates</span><b>&#9670;</b><span>700 DPI layered .TIF</span><b>&#9670;</b><span>SPOT_1 white channel</span><b>&#9670;</b><span>Choked underbase</span><b>&#9670;</b><span>Illustrator .AI at 1:1</span><b>&#9670;</b><span>100% K vector</span><b>&#9670;</b><span>Arc warp 5 / 12 / 16 / 20 oz</span><b>&#9670;</b>
+    <span>4imprint proofs</span><b>&#9670;</b><span>Solid-border proofs</span><b>&#9670;</b><span>PO &amp; distributor templates</span><b>&#9670;</b><span>700 DPI layered .TIF</span><b>&#9670;</b><span>SPOT_1 white channel</span><b>&#9670;</b><span>Choked underbase</span><b>&#9670;</b><span>Illustrator .AI at 1:1</span><b>&#9670;</b><span>100% K vector</span><b>&#9670;</b><span>Arc warp 5 / 12 / 16 / 20 oz</span><b>&#9670;</b>
+  </div>
+</div>
+
+<!-- Demo window ---------------------------------------------------------------- -->
+<section id="demo" class="sec">
   <div class="wrap">
-    <div class="sec-head">
-      <span class="tag">The gap</span>
-      <h2>A proof is a picture of the job, not the job.</h2>
+    <div class="sec-head center reveal">
+      <span class="tag">Watch it work</span>
+      <h2>One proof. Three production files.</h2>
       <p class="lede">
-        It shows the art on a tilted product render, at the wrong scale, in the
-        wrong colour space, with the imprint area drawn as a dashed box nobody
-        can select. Getting from that to a file your press accepts is manual
-        work, and it happens on every single order.
+        A proof comes in. PressReady finds both imprint boxes, rejects the one
+        drawn in perspective on the product photo, locks the flat one, and
+        writes the files your equipment needs.
       </p>
     </div>
 
-    <div class="compare">
-      <div class="before">
-        <h4>By hand</h4>
+    <div class="window reveal">
+      <div class="window-bar">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="window-title mono">pressready &mdash; proof_copperline_tee.pdf</span>
+        <span class="window-live mono"><i class="pulse"></i> live</span>
+      </div>
+      <div class="window-body">
+        <canvas data-proof-demo data-safe="0" data-center="1" aria-label="Animation: a proof is scanned, the skewed imprint box is rejected, the square one is locked, and three output files are produced"></canvas>
+      </div>
+    </div>
+
+    <div class="stats reveal">
+      <div class="stat"><div class="n"><span data-count="3">3</span></div><div class="k">Production formats from one upload</div></div>
+      <div class="stat"><div class="n">1:1</div><div class="k">Actual-size output, every time</div></div>
+      <div class="stat"><div class="n"><span data-count="700">700</span></div><div class="k">DPI layered TIF for transfers</div></div>
+      <div class="stat"><div class="n"><span data-count="26">26</span></div><div class="k">Real proofs in the test suite</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Problem ------------------------------------------------------------------ -->
+<section id="problem" class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">The gap</span>
+      <h2>A proof is a picture of the job, <span class="dim">not the job.</span></h2>
+      <p class="lede">
+        It shows the art on a tilted product render, at the wrong scale, in the
+        wrong colour space, with the imprint area drawn as a dashed box nobody
+        can select. Turning that into a file your press accepts is manual work,
+        on every single order.
+      </p>
+    </div>
+
+    <div class="vs reveal">
+      <div class="vs-col vs-before">
+        <div class="vs-top">
+          <h3>By hand</h3>
+          <span class="vs-time mono">Minutes per file</span>
+        </div>
         <ul>
           <li>Open the proof, hunt for the imprint box</li>
-          <li>Trace it, or eyeball the dimensions from the callout</li>
+          <li>Trace it, or eyeball dimensions from the callout</li>
           <li>Isolate the art, strip the product mockup behind it</li>
           <li>Scale to actual size and hope the callout was right</li>
           <li>Convert colour, build a white underbase, choke it</li>
-          <li>Minutes per file, and a different result per operator</li>
+          <li>A different result for every operator</li>
         </ul>
       </div>
-      <div class="after">
-        <h4>With PressReady</h4>
+      <div class="vs-mid" aria-hidden="true"><span>vs</span></div>
+      <div class="vs-col vs-after">
+        <div class="vs-top">
+          <h3>With PressReady</h3>
+          <span class="vs-time mono">Seconds</span>
+        </div>
         <ul>
           <li>Drop the proof in</li>
           <li>The square imprint box is found and locked automatically</li>
           <li>Skewed boxes on the product view are rejected, not used</li>
           <li>Art comes out at exactly 1:1</li>
-          <li>Underbase, spot channel, and choke are already correct</li>
-          <li>Seconds, and identical every time</li>
+          <li>Underbase, spot channel and choke are already correct</li>
+          <li>Identical output every time</li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Tools ----------------------------------------------------------------- -->
-<section id="tools">
+<!-- Tools ------------------------------------------------------------------- -->
+<section id="tools" class="sec">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head center reveal">
       <span class="tag">Three tools, one upload</span>
       <h2>Whatever the job runs on.</h2>
     </div>
 
-    <div class="grid-3">
-      <div class="card cropped tool">
-        <div class="colourbar bar"><i></i><i></i><i></i><i></i><i></i></div>
-        <h3>Screen print and heat transfer</h3>
-        <p>
-          A layered TIF at 700 DPI with an unlocked art layer over an RGB
-          composite, plus a named spot channel your RIP already understands.
-          The white underbase is choked so it cannot halo past the colour.
-        </p>
-        <div class="out">OUT: .TIF + underbase + 300 DPI crop</div>
-      </div>
+    <div class="tools">
+      <article class="tool spot reveal">
+        <div class="tool-icon">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M17 8l-9 5 3 9 5-2v20h16V20l5 2 3-9-9-5c-1 3-4 5-7 5s-6-2-7-5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="27" r="5" fill="currentColor" opacity=".35"/></svg>
+        </div>
+        <h3>Screen print &amp; heat transfer</h3>
+        <p>A layered 700 DPI TIF with an unlocked art layer over an RGB composite,
+           plus a named spot channel your RIP already understands. The white
+           underbase is choked so it can't halo past the colour.</p>
+        <div class="out mono"><span>.TIF</span><span>SPOT_1 underbase</span><span>300 DPI crop</span></div>
+      </article>
 
-      <div class="card cropped tool">
-        <div class="colourbar bar"><i></i><i></i><i></i><i></i><i></i></div>
+      <article class="tool spot reveal">
+        <div class="tool-icon">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4v14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 18l-3 6h6z" fill="currentColor"/><rect x="8" y="30" width="32" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 36h20" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"/></svg>
+        </div>
         <h3>Laser engraving</h3>
-        <p>
-          Clean vector at 1:1 scale with every shape converted to 100% K black,
-          written as the legacy Illustrator format engraving software actually
-          ingests. Background panels and white fills are dropped, since a laser
-          never marks them.
-        </p>
-        <div class="out">OUT: .AI vector, actual size</div>
-      </div>
+        <p>Clean vector at 1:1 scale with every shape converted to 100% K black and
+           overlapping pieces united, so nothing engraves as a hole. Written in the
+           legacy Illustrator format engraving software actually ingests.</p>
+        <div class="out mono"><span>.AI vector</span><span>100% K</span><span>Actual size</span></div>
+      </article>
 
-      <div class="card cropped tool">
-        <div class="colourbar bar"><i></i><i></i><i></i><i></i><i></i></div>
-        <h3>Cup and drinkware</h3>
-        <p>
-          Flat art pulled from the bleed box, squished to production size, then
-          arc warped so it prints straight on a tapered wall. Calibrated
-          against real cup warp guides, with the cutter line redrawn.
-        </p>
-        <div class="out">OUT: .PDF warped, 5 / 12 / 16 / 20 oz + stadium</div>
-      </div>
+      <article class="tool spot reveal">
+        <div class="tool-icon">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 10h24l-3 30H15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 20q10 4 20 0" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 30q9 3 18 0" fill="none" stroke="currentColor" stroke-width="2" opacity=".5"/></svg>
+        </div>
+        <h3>Cups &amp; drinkware</h3>
+        <p>Flat art pulled from the bleed box, sized to production, then arc-warped
+           so it prints straight on a tapered wall. Cup size is detected from the
+           proof, and the cutter line is redrawn clean.</p>
+        <div class="out mono"><span>Warped .PDF</span><span>5 / 12 / 16 / 20 oz</span><span>Stadium</span></div>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- See it ------------------------------------------------------------------ -->
-<section id="see">
+<!-- Real output ------------------------------------------------------------- -->
+<section id="output" class="sec">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head center reveal">
       <span class="tag">Real output</span>
       <h2>What comes out the other side.</h2>
+      <p class="lede">Every image here is the tools' actual output, run on a demo proof for a made-up brand.</p>
+    </div>
+
+    <div class="tabs reveal" role="tablist" aria-label="Output examples">
+      <button role="tab" id="tab-garment" aria-controls="panel-garment" aria-selected="true">Garment underbase</button>
+      <button role="tab" id="tab-laser" aria-controls="panel-laser" aria-selected="false" tabindex="-1">Laser engraving</button>
+      <button role="tab" id="tab-cup" aria-controls="panel-cup" aria-selected="false" tabindex="-1">Cup warp</button>
+      <span class="tab-ink" aria-hidden="true"></span>
+    </div>
+
+    <div class="shot-frame reveal">
+      <figure role="tabpanel" id="panel-garment" aria-labelledby="tab-garment" class="shot is-on">
+        <img src="/img/2_garment_underbase.png" alt="Colour layer, white underbase and the print simulated on a dark shirt, with a 6 point text comparison" width="1920" height="1080" loading="lazy">
+      </figure>
+      <figure role="tabpanel" id="panel-laser" aria-labelledby="tab-laser" class="shot" hidden>
+        <img src="/img/3_laser_unite.png" alt="Laser engraving before and after: overlapping shapes engrave as holes, united output engraves solid" width="1920" height="1080" loading="lazy">
+      </figure>
+      <figure role="tabpanel" id="panel-cup" aria-labelledby="tab-cup" class="shot" hidden>
+        <img src="/img/4_cup_warp.png" alt="Flat cup proof turned into an arc-warped print file" width="1920" height="1080" loading="lazy">
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- How --------------------------------------------------------------------- -->
+<section id="how" class="sec">
+  <div class="wrap how">
+    <div class="how-head reveal">
+      <span class="tag">How it works</span>
+      <h2>It reads the proof the way your art lead does.</h2>
       <p class="lede">
-        Every image below is the tools' actual output, run on a demo proof for
-        a made-up brand.
+        The hard part was never the export. It's finding the imprint area
+        reliably across every layout a distributor invents, including the ones
+        where the same box appears twice.
       </p>
+      <a href="#get-demo" class="btn btn-ghost" data-open-form>Try it on your proofs</a>
     </div>
-    <div class="shots">
-      <figure><img src="/img/2_garment_underbase.png" alt="Colour layer, white underbase and the print simulated on a dark shirt, with a 6 point text comparison" loading="lazy" width="1920" height="1080"></figure>
-      <figure><img src="/img/3_laser_unite.png" alt="Laser engraving before and after: overlapping shapes engrave as holes, united output engraves solid" loading="lazy" width="1920" height="1080"></figure>
-      <figure><img src="/img/4_cup_warp.png" alt="Flat cup proof turned into an arc-warped print file" loading="lazy" width="1920" height="1080"></figure>
-    </div>
+
+    <ol class="steps" id="steps">
+      <span class="steps-line" aria-hidden="true"><i></i></span>
+      <li class="reveal">
+        <h3>Find every candidate box</h3>
+        <p>Dashed borders, solid stroked rectangles, and separate 100% artwork pages are all recognised.</p>
+      </li>
+      <li class="reveal">
+        <h3>Throw out the ones drawn in perspective</h3>
+        <p>Proofs repeat the imprint box on the tilted product render, skewed into a parallelogram. Picking that one is what makes art come out crooked, so only boxes square to the page survive.</p>
+      </li>
+      <li class="reveal">
+        <h3>Lift the art, drop the mockup</h3>
+        <p>Background panels standing in for product colour, and fills close enough to white to be page rather than ink, are left behind.</p>
+      </li>
+      <li class="reveal">
+        <h3>Write what the machine wants</h3>
+        <p>Spot channels, choked underbase, pure K vector, or an arc warp, depending on where the job is headed.</p>
+      </li>
+    </ol>
   </div>
 </section>
 
-<!-- How -------------------------------------------------------------------- -->
-<section id="how">
+<!-- Pricing ------------------------------------------------------------------ -->
+<section id="pricing" class="sec">
   <div class="wrap">
-    <div class="grid-2">
-      <div>
-        <span class="tag">How it works</span>
-        <h2>It reads the proof the way your art lead does.</h2>
-        <p class="lede">
-          The hard part was never the export. It was finding the imprint area
-          reliably across every layout a distributor invents, including the
-          ones where the same box appears twice.
-        </p>
-      </div>
-
-      <div class="steps">
-        <div class="step">
-          <div>
-            <h3>Find every candidate box</h3>
-            <p>Dashed borders, solid stroked rectangles, and separate hundred
-               percent artwork pages are all recognised.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div>
-            <h3>Throw out the ones drawn in perspective</h3>
-            <p>Proofs repeat the imprint box on the tilted product render, where
-               it is skewed into a parallelogram. Picking that one is what makes
-               art come out crooked, so only boxes square to the page survive.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div>
-            <h3>Lift the art, drop the mockup</h3>
-            <p>Background panels standing in for product colour, and fills close
-               enough to white to be page rather than ink, are left behind.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div>
-            <h3>Write what the machine wants</h3>
-            <p>Spot channels, choked underbase, pure K vector, or an arc warp,
-               depending on where the job is headed.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Pricing ---------------------------------------------------------------- -->
-<section id="pricing">
-  <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head center reveal">
       <span class="tag">Pricing</span>
       <h2>One price. Every tool.</h2>
-      <p class="lede">
-        One price with no per seat maths and no file counting. If a proof
-        layout ever shows up that we cannot read, send it over and it gets
-        added.
-      </p>
+      <p class="lede">No per-seat maths and no file counting. If a proof layout ever shows up that we can't read, send it over and it gets added.</p>
     </div>
 
-    <div class="price">
-      <div class="card cropped plan feature">
-        <span class="ribbon">Most shops</span>
-        <h3>Standard</h3>
-        <div class="amt">$199</div>
-        <div class="per">per month, unlimited files</div>
+    <div class="plans">
+      <div class="plan plan-feature spot reveal">
+        <span class="ribbon mono">Most shops</span>
+        <h3>Monthly</h3>
+        <div class="amt"><span class="cur">$</span>199<span class="per">/mo</span></div>
+        <p class="plan-sub">Unlimited files, unlimited users</p>
         <ul>
-                    <li>All three tools, unlimited files and users</li>
-          <li>Full resolution output, no watermark</li>
+          <li>All three tools</li>
+          <li>Full-resolution output, no watermark</li>
           <li>New proof layouts added on request</li>
           <li>Next business day support</li>
         </ul>
-        <a href="mailto:hello@pressreadygo.com?subject=PressReady%20demo" class="btn btn-primary btn-block">Request a demo</a>
+        <a href="#get-demo" class="btn btn-primary btn-block btn-lg" data-open-form data-plan="Monthly ($199/mo)">Book a demo</a>
       </div>
 
-      <div class="card cropped plan">
+      <div class="plan spot reveal">
+        <span class="ribbon ribbon-ghost mono">2 months free</span>
         <h3>Annual</h3>
-        <div class="amt">$1,990</div>
-        <div class="per">per year, two months free</div>
+        <div class="amt"><span class="cur">$</span>1,990<span class="per">/yr</span></div>
+        <p class="plan-sub">Works out to about $166/mo</p>
         <ul>
-          <li>Everything in Standard</li>
+          <li>Everything in Monthly</li>
           <li>Priority on new format support</li>
-          <li>One onboarding session for your art team</li>
+          <li>Onboarding session for your art team</li>
         </ul>
-        <a href="mailto:hello@pressreadygo.com?subject=PressReady%20demo" class="btn btn-ghost btn-block">Request a demo</a>
+        <a href="#get-demo" class="btn btn-ghost btn-block btn-lg" data-open-form data-plan="Annual ($1,990/yr)">Book a demo</a>
       </div>
     </div>
 
-    <p class="muted center" style="font-size:.88rem;margin:26px auto 0;max-width:56ch">
-      PressReady is in early access. Shops are being onboarded one at a
-      time, starting with a demo on your own proofs.
-    </p>
+    <p class="fine center reveal">PressReady is in early access. Shops are onboarded one at a time, starting with a demo on your own proofs.</p>
   </div>
 </section>
 
-<!-- CTA -------------------------------------------------------------------- -->
-<section class="cta-band">
-  <div class="wrap">
-    <span class="tag" style="justify-content:center">Ready when you are</span>
-    <h2>Send one proof through and see.</h2>
-    <p class="lede" style="margin-inline:auto">
-      Email a proof that gave your art department trouble, and we will run it
-      on a call with you.
-    </p>
-    <div style="margin-top:28px">
-      <a href="mailto:hello@pressreadygo.com?subject=PressReady%20demo" class="btn btn-primary">Request a demo</a>
+<!-- FAQ ---------------------------------------------------------------------- -->
+<section id="faq" class="sec">
+  <div class="wrap faq-wrap">
+    <div class="sec-head reveal">
+      <span class="tag">Questions</span>
+      <h2>Good questions, straight answers.</h2>
+    </div>
+    <div class="faq reveal">
+      <details open>
+        <summary>Which proofs does it read?</summary>
+        <p>4imprint art proofs, solid-border proofs, and PO / distributor templates. If your distributor uses a layout we haven't seen, send it over and support for it gets added.</p>
+      </details>
+      <details>
+        <summary>What files do I get back?</summary>
+        <p>For screen print and heat transfer, a layered 700 DPI TIF with a named SPOT_1 white channel, plus a 300 DPI colour crop and underbase. For laser, a 1:1 vector .AI in 100% K. For cups, an arc-warped print PDF sized for 5, 12, 16 or 20 oz cups, or stadium cups.</p>
+      </details>
+      <details>
+        <summary>Do my artists still need Illustrator?</summary>
+        <p>Not for this step. The proof goes in and the production file comes out with no Illustrator session and no hand-traced imprint box. Your team can still open and tweak the output in their usual tools.</p>
+      </details>
+      <details>
+        <summary>How does the demo work?</summary>
+        <p>Fill in the form and we'll set up a short call. Bring a proof that gave your art department trouble and we'll run it live, so you see real output on real work before you commit to anything.</p>
+      </details>
+      <details>
+        <summary>Is it per user or per file?</summary>
+        <p>Neither. One flat price covers every tool, unlimited files and unlimited users.</p>
+      </details>
     </div>
   </div>
 </section>
+
+<!-- Closing CTA --------------------------------------------------------------- -->
+<section id="start" class="sec close">
+  <div class="close-glow" aria-hidden="true"></div>
+  <div class="wrap close-grid">
+    <div class="close-copy reveal">
+      <span class="tag">Ready when you are</span>
+      <h2>Send one proof through <span class="grad">and see.</span></h2>
+      <p class="lede">Leave your details and we'll run a proof that's given your shop trouble, live, on a call with you.</p>
+      <ul class="checks">
+        <li>Real output on your real proofs</li>
+        <li>No obligation, no credit card</li>
+        <li>Or email us directly at <a href="mailto:hello@pressreadygo.com">hello@pressreadygo.com</a></li>
+      </ul>
+    </div>
+    <div class="form-slot reveal" data-form-slot="closing"></div>
+  </div>
+</section>
+
+</main>
 
 <footer class="foot">
   <div class="wrap foot-in">
-    <div>PressReady</div>
-    <div class="mono"><a href="mailto:hello@pressreadygo.com">hello@pressreadygo.com</a></div>
+    <a class="logo" href="/" aria-label="PressReady home">
+      <svg class="logo-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M3 3h7M3 3v7M29 3h-7M29 3v7M3 29h7M3 29v-7M29 29h-7M29 29v-7" stroke="#7E9BA1" stroke-width="1.6" stroke-linecap="square"/>
+        <rect x="9" y="9" width="14" height="14" rx="1.5" stroke="#22D3EE" stroke-width="1.8"/>
+        <path d="M12.5 19.5 19.5 12.5M19.5 12.5h-4.2M19.5 12.5v4.2" stroke="#22D3EE" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="logo-text">Press<b>Ready</b></span>
+    </a>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="#tools">Tools</a>
+      <a href="#output">Real output</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="mailto:hello@pressreadygo.com" class="mono">hello@pressreadygo.com</a>
+    </nav>
+    <div class="foot-copy">&copy; <span id="yr">2026</span> PressReady</div>
   </div>
 </footer>
 
-<script src="/static/hero.js"></script>
+<!-- Mobile sticky CTA -->
+<div class="mbar" id="mbar">
+  <a href="#get-demo" class="btn btn-primary btn-block" data-open-form>Book a free demo</a>
+</div>
+
+<!-- Form dialog: filled by JS with a copy of the hero form -->
+<dialog class="modal" id="form-modal" aria-labelledby="modal-title">
+  <button class="modal-x" type="button" aria-label="Close" data-close>&times;</button>
+  <div data-form-slot="modal"></div>
+</dialog>
+
+<script src="/static/hero.js" defer></script>
+<script src="/static/site.js" defer></script>
 </body>
 </html>

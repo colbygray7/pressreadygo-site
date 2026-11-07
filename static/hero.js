@@ -11,7 +11,7 @@
 */
 
 (function () {
-  const canvas = document.getElementById('hero-canvas');
+  const canvas = document.querySelector('canvas[data-proof-demo]') || document.getElementById('hero-canvas');
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
@@ -188,21 +188,27 @@
     Everything the animation draws is derived from this, so nothing can drift
     over the type.
   */
-  const SAFE_LEFT = 0.56;   // fraction of width reserved for text
+  // data-safe="0" data-center="1" lets the scene run inside a framed demo
+  // window instead of beside the headline.
+  const SAFE_LEFT = canvas.dataset.safe !== undefined ? parseFloat(canvas.dataset.safe) : 0.56;
+  const CENTER = canvas.dataset.center === '1';
 
   function layout() {
     const margin = Math.max(26, W * 0.035);
     const gap = Math.max(12, W * 0.011);
     const avail = W - margin - W * SAFE_LEFT;
 
-    const chipW = clamp(avail * 0.36, 104, 152);
-    const pageW = clamp(avail - chipW - gap, 132, 268);
+    // A framed demo has the whole width to itself, so it can run larger,
+    // limited by height so the page never spills out of the frame.
+    const chipW = clamp(avail * 0.36, 104, CENTER ? 176 : 152);
+    const pageMax = CENTER ? Math.min(330, (H - 70) / 1.26) : 268;
+    const pageW = clamp(avail - chipW - gap, 132, pageMax);
     const pageH = pageW * 1.26;
 
     // Push right into any room left over, so it hugs the edge rather than
     // floating in the middle of the gap.
     const used = pageW + gap + chipW;
-    const px = W * SAFE_LEFT + Math.max(0, avail - used);
+    const px = CENTER ? (W - used) / 2 : W * SAFE_LEFT + Math.max(0, avail - used);
 
     return {
       px, pageW, pageH, chipW, gap,
@@ -220,7 +226,7 @@
 
     // On narrow screens the text sits on top of all this, so pull it back
     // rather than fighting the headline for contrast.
-    const roomAlpha = W < 900 ? 0.30 : 1;
+    const roomAlpha = (SAFE_LEFT > 0 && W < 900) ? 0.30 : 1;
 
     drawGrid(t);
 
@@ -415,10 +421,19 @@
 
   let start = null;
 
+  // Only animate while on screen, and never run two loops at once.
+  let visible = true, running = false;
+  function kick() {
+    if (!running && visible && !reduced) { running = true; requestAnimationFrame(frame); }
+  }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; kick(); }).observe(canvas);
+  }
+
   function frame(ts) {
     if (start === null) start = ts;
     scene((ts - start) / 1000);
-    requestAnimationFrame(frame);
+    if (visible) requestAnimationFrame(frame); else running = false;
   }
 
   if (reduced) {
@@ -426,6 +441,6 @@
     scene(11.5);
     window.addEventListener('resize', () => scene(11.5));
   } else {
-    requestAnimationFrame(frame);
+    kick();
   }
 })();
