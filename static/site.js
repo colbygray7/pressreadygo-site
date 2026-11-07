@@ -1,23 +1,55 @@
 /*
   PressReady marketing page behaviour.
 
-  Lead capture goes to FormSubmit (https://formsubmit.co), which emails each
-  submission to LEAD_INBOX. No server, no account. The very first submission
-  triggers a one-time activation email to that inbox; click the link in it and
-  every later submission is delivered.
+  Lead capture, two channels sent at the same time:
 
-  If the request fails for any reason, the visitor is shown a pre-filled email
-  link instead, so a lead is never silently lost.
+  1. LEADS_WEBHOOK: a Make scenario ("PressReady website leads") that saves
+     every lead to the Make data store "PressReady leads" and answers
+     {success: true}. This is the system of record.
+  2. EMAIL_ENDPOINT: FormSubmit, which emails the lead to LEAD_INBOX. Its very
+     first submission sends a one-time activation link to that inbox.
+
+  The visitor sees success if either channel confirms. If neither does, they
+  get a one-tap pre-filled email instead, so a lead is never silently lost.
 */
 (function () {
   'use strict';
 
   const LEAD_INBOX = 'hello@pressreadygo.com';
-  // Swap this for any JSON-accepting endpoint (Formspree, Web3Forms, a Make or
-  // Zapier webhook) and leads go there instead. It must answer {success: true}
-  // or a 2xx to count as delivered.
-  const ENDPOINT = 'https://formsubmit.co/ajax/' + LEAD_INBOX;
+  const LEADS_WEBHOOK = 'https://hook.us2.make.com/4k15ful5ugrqb3n67620wrx04o3uotpm';
+  const EMAIL_ENDPOINT = 'https://formsubmit.co/ajax/' + LEAD_INBOX;
   const TIMEOUT_MS = 8000;
+
+  // POST JSON; resolves true only on an explicit {success: true}.
+  async function send(url, payload) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: ctrl.signal,
+        keepalive: true,
+      });
+      const data = await res.json().catch(() => ({}));
+      return res.ok && String(data.success) === 'true';
+    } catch (e) {
+      return false;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  // True as soon as any channel confirms; false once all have failed.
+  function anyDelivered(promises) {
+    return new Promise(resolve => {
+      let left = promises.length;
+      promises.forEach(p => p.then(ok => {
+        if (ok) resolve(true); else if (--left === 0) resolve(false);
+      }));
+    });
+  }
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $ = (s, r) => (r || document).querySelector(s);
@@ -126,20 +158,7 @@
       form.classList.add('sending');
       $('.btn-label', form).textContent = 'Sending…';
 
-      let ok = false;
-      try {
-        const ctrl = new AbortController();
-        const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
-        const res = await fetch(ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify(payload),
-          signal: ctrl.signal,
-        });
-        clearTimeout(timer);
-        const data = await res.json().catch(() => ({}));
-        ok = res.ok && (data.success === undefined || String(data.success) === 'true');
-      } catch (x) { ok = false; }
+      const ok = await anyDelivered([send(LEADS_WEBHOOK, payload), send(EMAIL_ENDPOINT, payload)]);
 
       form.classList.remove('sending');
       $('.btn-label', form).textContent = 'Book my free demo';
