@@ -24,10 +24,15 @@
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
     try {
+      // URL-encoded form data is a CORS-safelisted request. That means the
+      // browser can send it directly, without an OPTIONS preflight that some
+      // form providers reject before the request ever reaches their service.
+      const body = new URLSearchParams();
+      Object.entries(payload).forEach(([key, value]) => body.append(key, String(value)));
       const res = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(payload),
+        headers: { 'Accept': 'application/json' },
+        body,
         signal: ctrl.signal,
       });
       const data = await res.json().catch(() => ({}));
